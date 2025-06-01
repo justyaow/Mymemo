@@ -9,4 +9,6 @@
     <string name="register">注册</string>
     <string name="confirmPassword">确认密码：</string>
     <string name="confirmPasswordHint">再次输入密码</string>
+    <string name="createItem">新建</string>
+    <string name="checkSave">保存密码</string>
 </resources>

@@ -9,6 +9,8 @@ import android.view.View
 import android.widget.EditText
 import android.content.SharedPreferences
 import android.widget.Toast
+import android.database.sqlite.SQLiteDatabase
+import android.util.Log
 
 class RegisterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,16 +36,21 @@ class RegisterActivity : AppCompatActivity() {
             return
         }
 //        var prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val prefs: SharedPreferences = getSharedPreferences("user_information", MODE_PRIVATE)
-        val isExist: Boolean = prefs.contains(username)
-        if (isExist) {
+        val userInfo = MyDatabase(this, "memo", null, 1)
+        val infoW: SQLiteDatabase = userInfo.writableDatabase
+        val infoR: SQLiteDatabase = userInfo.readableDatabase
+        val cursor = infoR.rawQuery("select * from user where username = ?", arrayOf(username))
+        Log.d("cursor", "start")
+        if (cursor.moveToFirst()) {
             Toast.makeText(this, "用户已存在，请重新登录", Toast.LENGTH_SHORT).show()
+            cursor.close()
+            userInfo.close()
             finish()
         } else {
-            val editor: SharedPreferences.Editor = prefs.edit()
-            editor.putString(username, password)
-            editor.apply()
+            cursor.close()
+            infoW.execSQL("insert into user(username, password) values(?, ?)", arrayOf(username, password))
             Toast.makeText(this, "注册成功，请继续登录", Toast.LENGTH_SHORT).show()
+            userInfo.close()
             finish()
         }
     }
