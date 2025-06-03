@@ -24,18 +24,22 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        Log.d("main", "start")
+        setStatus()
+    }
+
+    fun setStatus() {
+//        Log.d("main", "start")
         val prefs: SharedPreferences = getSharedPreferences("user_information", MODE_PRIVATE)
         val usernameText: EditText = findViewById(R.id.usernameText)
         val passwordText: EditText = findViewById(R.id.passwordText)
-        if (prefs.contains("lastUsername")) {
-            Log.d("mainprefs", "yes")
-        } else {
-            Log.d("mainprefs", "no")
-        }
+//        if (prefs.contains("lastUsername")) {
+//            Log.d("mainprefs", "yes")
+//        } else {
+//            Log.d("mainprefs", "no")
+//        }
         val username: String? = prefs.getString("lastUsername", "")
         val password: String? = prefs.getString("lastPassword", "")
-        Log.d("mainlastUseranme", username.toString())
+//        Log.d("mainlastUseranme", username.toString())
         val checkSave: CheckBox = findViewById(R.id.checkSave)
         if (password != "") {
             checkSave.setChecked(true)
@@ -73,11 +77,11 @@ class MainActivity : AppCompatActivity() {
            val editor: SharedPreferences.Editor = prefs.edit()
             editor.putString("lastUsername", username)
             editor.apply()
-            if (prefs.contains("lastUsername")) {
-                Log.d("mainputlast", "yes")
-            } else {
-                Log.d("mainputlast", "no")
-            }
+//            if (prefs.contains("lastUsername")) {
+//                Log.d("mainputlast", "yes")
+//            } else {
+//                Log.d("mainputlast", "no")
+//            }
             val p: String = cursor.getString(cursor.getColumnIndexOrThrow("password"))
             if (p != password) {
                 Toast.makeText(this, "用户名或密码错误", Toast.LENGTH_SHORT).show()
@@ -85,6 +89,7 @@ class MainActivity : AppCompatActivity() {
                 userInfo.close()
             } else {
                 val intent = Intent(this, HomeActivity::class.java)
+                intent.putExtra("username", username)
                 Toast.makeText(this, "登录成功，欢迎您，" + username, Toast.LENGTH_SHORT).show()
                 if (checkSave.isChecked) {
                     editor.putString("lastPassword", password)
@@ -94,6 +99,7 @@ class MainActivity : AppCompatActivity() {
                     editor.apply()
                 }
                 startActivity(intent)
+                Log.d("mainLogin", "yes")
                 cursor.close()
                 userInfo.close()
             }

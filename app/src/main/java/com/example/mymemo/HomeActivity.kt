@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import android.app.AlertDialog
+import android.util.Log
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
@@ -23,7 +24,10 @@ class HomeActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = MyAdapter(memoList, ::editMemo, ::deleteMemo)
+        val username = intent.getStringExtra("username")
+        Log.d("homeLogin", "get username successful")
+        adapter = MyAdapter(this, memoList,username.toString(), ::editMemo, ::deleteMemo)
+        Log.d("homeLogin", "create adapter successful")
         recyclerView.adapter = adapter
 
         val createButton: Button = findViewById(R.id.createButton)
@@ -31,6 +35,7 @@ class HomeActivity : AppCompatActivity() {
             showCreateMemoDialog()
         }
     }
+
     private fun showCreateMemoDialog() {
         val input = EditText(this)
         AlertDialog.Builder(this)
