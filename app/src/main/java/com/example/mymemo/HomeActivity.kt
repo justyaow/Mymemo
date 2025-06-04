@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.Toast
 import android.app.AlertDialog
 import android.util.Log
+import android.content.Intent
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
@@ -25,6 +26,7 @@ class HomeActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
         val username = intent.getStringExtra("username")
+        Log.d("aaaaaa", "home username: " + username.toString())
         Log.d("homeLogin", "get username successful")
         adapter = MyAdapter(this, memoList,username.toString(), ::editMemo, ::deleteMemo)
         Log.d("homeLogin", "create adapter successful")
@@ -34,6 +36,27 @@ class HomeActivity : AppCompatActivity() {
         createButton.setOnClickListener {
             showCreateMemoDialog()
         }
+
+        val recycleButton: Button = findViewById(R.id.recycleButton)
+        recycleButton.setOnClickListener {
+            showRecycleActivity()
+        }
+
+        val backButton: Button = findViewById(R.id.backButton)
+        backButton.setOnClickListener {
+            backLogin()
+        }
+    }
+
+    private fun backLogin() {
+        finish()
+    }
+
+    private fun showRecycleActivity() {
+        val intent1 = Intent(this, RecycleActivity::class.java)
+        val username = intent.getStringExtra("username")
+        intent1.putExtra("username", username)
+        startActivity(intent1)
     }
 
     private fun showCreateMemoDialog() {

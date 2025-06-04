@@ -90,6 +90,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 val intent = Intent(this, HomeActivity::class.java)
                 intent.putExtra("username", username)
+                Log.d("aaaaaa", "main username: " + username)
                 Toast.makeText(this, "登录成功，欢迎您，" + username, Toast.LENGTH_SHORT).show()
                 if (checkSave.isChecked) {
                     editor.putString("lastPassword", password)

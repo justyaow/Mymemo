@@ -11,4 +11,6 @@
     <string name="confirmPasswordHint">再次输入密码</string>
     <string name="createItem">新建</string>
     <string name="checkSave">保存密码</string>
+    <string name="recycle">最近删除</string>
+    <string name="back">退出</string>
 </resources>

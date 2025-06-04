@@ -14,6 +14,7 @@ class MyAdapter(private val context: Context, private val itemList: MutableList<
     RecyclerView.Adapter<MyAdapter.ViewHolder>() {
 
     init {
+        Log.d("aaaaaa", "ada username: " + username)
         Log.d("adapterLogin", "init")
         val userInfo = MyDatabase(context, "memo", null, 1)
         Log.d("adapterLogin", "db init")
@@ -74,11 +75,32 @@ class MyAdapter(private val context: Context, private val itemList: MutableList<
     }
 
     fun removeItem(position: Int) {
+        Log.d("aaaaaa", "开始删除")
+        val content: String = itemList[position]
         itemList.removeAt(position)
         val userInfo = MyDatabase(context, "memo", null, 1)
         val infoW: SQLiteDatabase = userInfo.writableDatabase
         val infoR: SQLiteDatabase = userInfo.readableDatabase
         infoW.execSQL("delete from item where username = ? and id = ?", arrayOf(username, position))
+        Log.d("aaaaaa", "删除item完成")
+        var id: Int = 0
+        val hashTable = HashMap<Int, Int>()
+        val cursor = infoR.rawQuery("select * from recycler where rusername = ?", arrayOf(username))
+        if (cursor.moveToFirst()) {
+            do {
+                val x: Int = cursor.getInt(cursor.getColumnIndexOrThrow("rid"))
+                Log.d("aaaaaa", "x:" + x.toString())
+                hashTable[x] = 1
+            } while (cursor.moveToNext())
+        } else {
+            cursor.close()
+        }
+        while (hashTable[id] == 1) {
+            ++id
+        }
+        Log.d("aaaaaa", id.toString())
+        infoW.execSQL("insert into recycler(rid, rcontent, rusername) values(?, ?, ?)", arrayOf(id, content, username))
+        Log.d("aaaaaa", "删除recycler完成" + username)
         userInfo.close()
         notifyItemRemoved(position)
     }
