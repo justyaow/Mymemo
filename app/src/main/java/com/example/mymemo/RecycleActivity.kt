@@ -39,6 +39,14 @@ class RecycleActivity : AppCompatActivity() {
         AlertDialog.Builder(this)
             .setTitle("详情")
             .setView(input)
+            .setPositiveButton("还原") { _, _ ->
+                val newText = input.text.toString()
+                if (newText.isNotEmpty()) {
+                    adapter.editItem(position, newText)
+                } else {
+                    Toast.makeText(this, "请输入内容", Toast.LENGTH_SHORT).show()
+                }
+            }
             .setNegativeButton("取消", null)
             .show()
     }

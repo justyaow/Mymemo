@@ -79,6 +79,33 @@ class MyAdapter1(private val context: Context, private val itemList: MutableList
     }
 
     fun editItem(position: Int, newText: String) {
-
+//        Log.d("aaaaaa", "开始删除")
+        val content: String = itemList[position]
+        itemList.removeAt(position)
+        val userInfo = MyDatabase(context, "memo", null, 1)
+        val infoW: SQLiteDatabase = userInfo.writableDatabase
+        val infoR: SQLiteDatabase = userInfo.readableDatabase
+        infoW.execSQL("delete from recycler where rusername = ? and rid = ?", arrayOf(username, idList[position]))
+//        Log.d("aaaaaa", "删除item完成")
+        var id: Int = 0
+        val hashTable = HashMap<Int, Int>()
+        val cursor = infoR.rawQuery("select * from item where username = ?", arrayOf(username))
+        if (cursor.moveToFirst()) {
+            do {
+                val x: Int = cursor.getInt(cursor.getColumnIndexOrThrow("id"))
+//                Log.d("aaaaaa", "x:" + x.toString())
+                hashTable[x] = 1
+            } while (cursor.moveToNext())
+        } else {
+            cursor.close()
+        }
+        while (hashTable[id] == 1) {
+            ++id
+        }
+//        Log.d("aaaaaa", id.toString())
+        infoW.execSQL("insert into item(id, content, username) values(?, ?, ?)", arrayOf(id, content, username))
+        Log.d("aaaaaa", "还原完成" + username)
+        userInfo.close()
+        notifyItemRemoved(position)
     }
 }
